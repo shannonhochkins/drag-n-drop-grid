@@ -10,6 +10,7 @@
     "lib": ["es2015", "esnext.asynciterable", "dom"],
     "module": "esnext",
     "target": "es5",
+    "rootDir": "src",
     "outDir": "esm",
     "skipLibCheck": true,
     "noImplicitAny": true,
@@ -21,12 +22,13 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": false
   },
-  "includes": ["src", "stories"],
+  "include": ["src", "stories"],
   "exclude": [
     "node_modules",
     "dist",
     "tests",
     "esm",
+    "stories",
     "src/**/__tests__"
   ]
 }
