@@ -52,7 +52,7 @@ export function GridDropZone({
     return {
       xy: [0, 0],
       immediate: true,
-      zIndex: "0",
+      zIndex: "-1",
       scale: 1,
       opacity: 1
     };
@@ -126,9 +126,11 @@ export function GridDropZone({
       position: 'absolute',
       width: grid.columnWidth,
       height: grid.rowHeight,
+      userSelect: 'none',
       backgroundColor: 'rgba(0,0,0,0.1)',
       border: '2px dashed #999',
       opacity: to([styles.opacity], (o) => o),
+      zIndex: styles.zIndex,
       transform: to(
         [styles.xy, styles.scale],
         (xy, s) =>
@@ -140,8 +142,8 @@ export function GridDropZone({
   const hideDropzone = () => {
     set({
       immediate: false,
-      zIndex: "1",
-      scale: 1,
+      zIndex: "-1",
+      scale: 0.5,
       opacity: 0
     });
   }
@@ -273,7 +275,7 @@ export function GridDropZone({
               set({
                 xy: [x, y],
                 immediate: false,
-                zIndex: "1",
+                zIndex: "initial",
                 scale: 1,
                 opacity: 0.8
               });

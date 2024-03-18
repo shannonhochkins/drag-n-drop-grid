@@ -6,12 +6,15 @@ import { ChildRender } from "./grid-types";
 
 interface GridItemProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   children: ReactNode | ChildRender;
+  /** if the user can select the content within the item @default false */
+  userSelect?: boolean;
 }
 
 export function GridItem({
   children,
   style,
   className,
+  userSelect = false,
   ...other
 }: GridItemProps) {
   const context = useContext(GridItemContext);
@@ -147,6 +150,7 @@ export function GridItem({
       opacity: styles.opacity,
       height: rowHeight + "px",
       boxSizing: "border-box",
+      userSelect: userSelect ? "auto" : "none",
       transform: to(
         [styles.xy, styles.scale],
         (xy, s) =>
