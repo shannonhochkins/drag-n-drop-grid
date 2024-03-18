@@ -59,7 +59,6 @@ export function GridItem({
       return {
         xy: mountXY,
         immediate: true,
-        zIndex: "1",
         scale: 1.1,
         opacity: 0.8
       };
@@ -68,7 +67,6 @@ export function GridItem({
     return {
       xy: [left, top],
       immediate: true,
-      zIndex: "0",
       scale: 1,
       opacity: 1
     };
@@ -80,7 +78,6 @@ export function GridItem({
     const y = startCoords.current[1] + state.movement[1];
     set({
       xy: [x, y],
-      zIndex: "1",
       immediate: true,
       opacity: 0.8,
       scale: 1.1
@@ -129,7 +126,6 @@ export function GridItem({
     if (!dragging.current) {
       set({
         xy: [left, top],
-        zIndex: "0",
         opacity: 1,
         scale: 1,
         immediate: false
@@ -143,7 +139,7 @@ export function GridItem({
     ...bind(),
     style: {
       cursor: !disableDrag ? "grab" : undefined,
-      zIndex: styles.zIndex,
+      zIndex: zoneDragging || mountWithTraverseTarget ? 1 : 'auto',
       position: "absolute",
       width: columnWidth + "px",
       opacity: styles.opacity,
