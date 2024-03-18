@@ -8,6 +8,7 @@ export interface GridSettings {
 
 export type GridState = {
   dragging: boolean;
+  zoneDragging: boolean;
   disabled: boolean;
   i: number;
   grid: GridSettings;

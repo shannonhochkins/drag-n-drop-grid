@@ -80,7 +80,7 @@ function Template({ single = false }: { single?: boolean}) {
       >
         <div
           style={{
-            transform: mounted ? `translateX(-100px)` : `translateX(0)`,
+            transform: mounted ? `translateX(100px)` : `translateX(0)`,
             transition: "transform 0.25s ease",
             width: "600px",
             display: "flex",
@@ -270,7 +270,7 @@ function TransformExample() {
   return (
     <div
       style={{
-        transform: transform ? "translateX(-30%)" : "translateX(0)",
+        transform: transform ? "translateX(30%)" : "translateX(0)",
         transition: "transform 0.25s ease"
       }}
     >
@@ -315,3 +315,47 @@ function ReadmeExample() {
     </GridContextProvider>
   );
 }
+
+
+function DisabledExample() {
+  const [items, setItems] = React.useState([1, 2, 3, 4]); // supply your own state
+
+  // target id will only be set if dragging from one dropzone to another.
+  function onChange(
+    sourceId: any,
+    sourceIndex: any,
+    targetIndex: any,
+    targetId: any
+  ) {
+    const nextState = swap(items, sourceIndex, targetIndex);
+    setItems(nextState);
+  }
+
+  return (
+    <GridContextProvider onChange={onChange}>
+      <GridDropZone
+        id="items"
+        boxesPerRow={4}
+        rowHeight={100}
+        style={{ height: "400px" }}
+      >
+        {items.map((item: any) => (
+          //only disable 2
+          <GridItem key={item} disabled={item === 2}>
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              {item}
+              {item === 2 ? "(Disabled)" : ""}
+            </div>
+          </GridItem>
+        ))}
+      </GridDropZone>
+    </GridContextProvider>
+  );
+}
+
+export const DisabledGridItem = () => <DisabledExample />;

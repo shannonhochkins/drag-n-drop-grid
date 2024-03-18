@@ -8,6 +8,8 @@ interface GridItemProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children'
   children: ReactNode | ChildRender;
   /** if the user can select the content within the item @default false */
   userSelect?: boolean;
+  /** if an individual item can have it's drag disabled */
+  disabled?: boolean;
 }
 
 export function GridItem({
@@ -15,6 +17,7 @@ export function GridItem({
   style,
   className,
   userSelect = false,
+  disabled = false,
   ...other
 }: GridItemProps) {
   const context = useContext(GridItemContext);
@@ -36,7 +39,8 @@ export function GridItem({
     onMove,
     onEnd,
     grid,
-    dragging: isDragging
+    dragging: isDragging,
+    zoneDragging
   } = context;
 
   const { columnWidth, rowHeight } = grid;
@@ -94,9 +98,9 @@ export function GridItem({
   }
 
   const bind = useDrag((state) => {
-    const { active, first, last } = state;
+    const { first, last } = state;
 
-    if (disableDrag) return;
+    if (disableDrag || disabled) return;
 
     if (first) {
       onStart();
@@ -133,17 +137,12 @@ export function GridItem({
     }
   }, [dragging.current, left, top]);
 
+
   const props = {
-    className:
-      "GridItem" +
-      (isDragging ? " dragging" : "") +
-      (!!disableDrag ? " disabled" : "") +
-      className
-        ? ` ${className}`
-        : "",
+    className: `GridItem${isDragging ? " dragging" : ""}${disableDrag ? " disabled" : ""}${className ? ` ${className}` : ""}`,
     ...bind(),
     style: {
-      cursor: !!disableDrag ? "grab" : undefined,
+      cursor: !disableDrag ? "grab" : undefined,
       zIndex: styles.zIndex,
       position: "absolute",
       width: columnWidth + "px",
@@ -151,7 +150,9 @@ export function GridItem({
       height: rowHeight + "px",
       boxSizing: "border-box",
       userSelect: userSelect ? "auto" : "none",
-      transform: to(
+      top: to([styles.xy], (xy) => zoneDragging ? 'auto' : `${xy[1]}px`),
+      left: to([styles.xy], (xy) => zoneDragging ? 'auto' : `${xy[0]}px`),
+      transform: !zoneDragging ? 'none' : to(
         [styles.xy, styles.scale],
         (xy, s) =>
           `translate3d(${typeof xy === 'number' ? xy : xy[0]}px, ${typeof xy === 'number' ? xy : xy[1]}px, 0) scale(${s})`
@@ -164,6 +165,7 @@ export function GridItem({
   return typeof children === "function" ? (
     children(animated.div, props, {
       dragging: isDragging,
+      zoneDragging,
       disabled: !!disableDrag,
       i,
       grid

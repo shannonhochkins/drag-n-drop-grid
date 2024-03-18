@@ -52,14 +52,13 @@ export function GridDropZone({
     return {
       xy: [0, 0],
       immediate: true,
-      zIndex: "-1",
       scale: 1,
       opacity: 1
     };
   })
   const ref = React.useRef<HTMLDivElement>(null);
   const { bounds, remeasure } = useMeasure(ref);
-  const dragging = React.useRef(false);
+  const [zoneDragging, setZoneDragging] = React.useState(false);
   const [draggingIndex, setDraggingIndex] = React.useState<number | null>(null);
   const [placeholder, setPlaceholder] = React.useState<PlaceholderType | null>(
     null
@@ -120,7 +119,8 @@ export function GridDropZone({
       columnWidth: grid.columnWidth,
     },
     disabled: disableDrag,
-    dragging: dragging.current,
+    zoneDragging,
+    dragging: zoneDragging,
   }) : (
     <animated.div key="placeholder" style={{
       position: 'absolute',
@@ -130,7 +130,7 @@ export function GridDropZone({
       backgroundColor: 'rgba(0,0,0,0.1)',
       border: '2px dashed #999',
       opacity: to([styles.opacity], (o) => o),
-      zIndex: styles.zIndex,
+      zIndex: zoneDragging ? 1 : -1,
       transform: to(
         [styles.xy, styles.scale],
         (xy, s) =>
@@ -142,7 +142,6 @@ export function GridDropZone({
   const hideDropzone = () => {
     set({
       immediate: false,
-      zIndex: "-1",
       scale: 0.5,
       opacity: 0
     });
@@ -180,7 +179,9 @@ export function GridDropZone({
 
           function onMove(state: FullGestureState<'drag'>, x: number, y: number) {
             if (!ref.current) return;
-            dragging.current = true;
+            if (!zoneDragging) {
+              setZoneDragging(true);
+            }
 
             if (draggingIndex !== i) {
               setDraggingIndex(i);
@@ -233,7 +234,7 @@ export function GridDropZone({
               x + grid.columnWidth / 2,
               y + grid.rowHeight / 2
             );
-            dragging.current = false;
+            setZoneDragging(false);
 
             const targetIndex =
               targetDropId !== id
@@ -275,7 +276,6 @@ export function GridDropZone({
               set({
                 xy: [x, y],
                 immediate: false,
-                zIndex: "initial",
                 scale: 1,
                 opacity: 0.8
               });
@@ -298,7 +298,8 @@ export function GridDropZone({
                 onEnd,
                 onStart,
                 grid,
-                dragging: i === draggingIndex
+                dragging: i === draggingIndex,
+                zoneDragging
               }}
             >
               {child}
