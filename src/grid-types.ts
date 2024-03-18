@@ -26,7 +26,7 @@ export type MarkerRender = (
     width: number;
     height: number;
   },
-  state: GridState
+  state: Omit<GridState, 'i'>
 ) => React.ReactNode;
 
 /**

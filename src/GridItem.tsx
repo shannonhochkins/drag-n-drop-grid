@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, CSSProperties, ReactNode, ComponentPropsWithoutRef } from "react";
 import { useDrag, FullGestureState, Vector2 } from '@use-gesture/react';
-import { animated, interpolate, useSpring } from "react-spring";
+import { animated, to, useSpring } from "react-spring";
 import { GridItemContext } from "./GridItemContext";
 import { ChildRender } from "./grid-types";
 
@@ -91,15 +91,9 @@ export function GridItem({
   }
 
   const bind = useDrag((state) => {
-    const { active, movement: [mx, my], event, first, last } = state;
+    const { active, first, last } = state;
 
     if (disableDrag) return;
-
-    console.log({
-      active,
-      first,
-      last
-    })
 
     if (first) {
       onStart();
@@ -153,7 +147,7 @@ export function GridItem({
       opacity: styles.opacity,
       height: rowHeight + "px",
       boxSizing: "border-box",
-      transform: interpolate(
+      transform: to(
         [styles.xy, styles.scale],
         (xy, s) =>
           `translate3d(${typeof xy === 'number' ? xy : xy[0]}px, ${typeof xy === 'number' ? xy : xy[1]}px, 0) scale(${s})`

@@ -1,7 +1,7 @@
 {
   "name": "drag-n-drop-grid",
   "type": "module",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "grid style drag and drop for react",
   "main": "./dist/drag-n-drop-grid-cjs.cjs",
   "module": "./dist/drag-n-drop-grid-es.js",
@@ -19,6 +19,7 @@
   "scripts": {
     "test": "jest",
     "test-watch": "jest -w",
+    "start": "npm run storybook",
     "storybook": "storybook dev -p 6006",
     "build": "NODE_ENV=production vite build",
     "prepublishOnly": "npm run build",
