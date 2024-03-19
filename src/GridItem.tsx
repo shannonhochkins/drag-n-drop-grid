@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, CSSProperties, ReactNode, ComponentPropsWithoutRef } from "react";
-import { useDrag, FullGestureState, Vector2 } from '@use-gesture/react';
+import { useGesture, UserGestureConfig, FullGestureState, Vector2 } from '@use-gesture/react';
 import { animated, to, useSpring } from "react-spring";
 import { GridItemContext } from "./GridItemContext";
 import { ChildRender } from "./grid-types";
@@ -10,6 +10,8 @@ interface GridItemProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children'
   userSelect?: boolean;
   /** if an individual item can have it's drag disabled */
   disabled?: boolean;
+  /** useGesture options, note, if drag object is provided it will replace defaults not merge */
+  gestureOptions?: UserGestureConfig;
 }
 
 export function GridItem({
@@ -18,6 +20,7 @@ export function GridItem({
   className,
   userSelect = false,
   disabled = false,
+  gestureOptions = {},
   ...other
 }: GridItemProps) {
   const context = useContext(GridItemContext);
@@ -94,27 +97,37 @@ export function GridItem({
     onEnd(state, x, y);
   }
 
-  const bind = useDrag((state) => {
-    const { first, last } = state;
-
-    if (disableDrag || disabled) return;
-
-    if (first) {
-      onStart();
-      startCoords.current = [left, top];
-      dragging.current = true;
-    }
-    if (last) handleEnd(state)
-    else handleMove(state);
-
-  }, { 
-    // Options
-    pointer: {
-      buttons: [1], // Only allow the primary mouse button (left-click)
-      touch: true,
-      mouse: true, // This is the default in @use-gesture/react and matches 'enableMouse: true'
+  const bind = useGesture({
+    onDrag: (state) => {
+      const { first, last, active } = state;
+  
+      if (disableDrag || disabled) return;
+  
+      if (first) {
+        onStart();
+        startCoords.current = [left, top];
+        dragging.current = true;
+      }
+      if (last) handleEnd(state)
+      else if (active) handleMove(state);
+  
     },
-    filterTaps: true,
+    onClickCapture: ({ event }) => {
+      if (dragging.current) {
+        event.stopPropagation();
+      }
+    }
+  }, { 
+    drag: {
+      // Options
+      pointer: {
+        buttons: [1], // Only allow the primary mouse button (left-click)
+        touch: true,
+        mouse: true, // This is the default in @use-gesture/react and matches 'enableMouse: true'
+      },
+      filterTaps: true,
+    },
+    ...gestureOptions,
   });
 
   /**

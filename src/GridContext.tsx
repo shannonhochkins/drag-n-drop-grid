@@ -27,6 +27,7 @@ interface GridContextType {
   ) => void;
   traverse: TraverseType | null;
   endTraverse: () => void;
+  getDropzoneOptions: (id: string) => RegisterOptions | undefined;
   onChange: (
     sourceId: string,
     sourceIndex: number,
@@ -49,7 +50,8 @@ export const GridContext = React.createContext<GridContextType>({
   measureAll: noop,
   traverse: null,
   endTraverse: noop,
-  onChange: noop
+  onChange: noop,
+  getDropzoneOptions: noop,
 });
 
 interface GridContextProviderProps {
@@ -86,6 +88,10 @@ export function GridContextProvider({
 
   function remove(id: string) {
     dropRefs.current.delete(id);
+  }
+
+  function getDropzoneOptions(id: string) {
+    return dropRefs.current.get(id);
   }
 
   /**
@@ -296,6 +302,7 @@ export function GridContextProvider({
         remove,
         getActiveDropId,
         startTraverse,
+        getDropzoneOptions,
         traverse,
         measureAll,
         endTraverse,

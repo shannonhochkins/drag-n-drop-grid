@@ -46,6 +46,7 @@ export function GridDropZone({
     measureAll,
     onChange,
     remove,
+    getDropzoneOptions,
     getActiveDropId,
   } = React.useContext(GridContext);
   const [styles, set] = useSpring(() => {
@@ -129,7 +130,7 @@ export function GridDropZone({
       userSelect: 'none',
       backgroundColor: 'rgba(0,0,0,0.1)',
       border: '2px dashed #999',
-      opacity: to([styles.opacity], (o) => o),
+      opacity: styles.opacity,
       zIndex: zoneDragging ? 1 : -1,
       transform: to(
         [styles.xy, styles.scale],
@@ -147,6 +148,16 @@ export function GridDropZone({
     });
   }
   let matchedItem = false;
+  if (React.Children.count(children) === 0 && traverse?.targetId === id && traverse?.targetIndex !== undefined) {
+    const [x, y] = getPositionForIndex(traverse.targetIndex, grid).xy;
+    set({
+      xy: [x, y],
+      immediate: false,
+      scale: 1,
+      opacity: 0.8
+    });
+    matchedItem = true;
+  }
   const gridChildren = (<React.Fragment>
     {grid.columnWidth === 0
       ? null
@@ -235,7 +246,6 @@ export function GridDropZone({
               y + grid.rowHeight / 2
             );
             setZoneDragging(false);
-
             const targetIndex =
               targetDropId !== id
                 ? childCount
@@ -247,16 +257,17 @@ export function GridDropZone({
                     state.movement[1]
                   );
 
-              hideDropzone();
-
+            hideDropzone();
             // traverse?
             if (traverse) {
-              onChange(
-                traverse.sourceId,
-                traverse.sourceIndex,
-                traverse.targetIndex,
-                traverse.targetId
-              );
+              if (traverse.sourceId !== undefined && traverse.targetId !== undefined && traverse.sourceIndex !== undefined && traverse.targetIndex !== undefined) {
+                onChange(
+                  traverse.sourceId,
+                  traverse.sourceIndex,
+                  traverse.targetIndex,
+                  traverse.targetId
+                );
+              }
             } else {
               onChange(id, i, targetIndex);
             }
@@ -268,18 +279,20 @@ export function GridDropZone({
           function onStart() {
             measureAll();
           }
+          const isSwappingTraversing = isTraverseTarget && traverse !== null && i === traverse.targetIndex;
+          const isSwappingPlaceholder = placeholder !== null && i === placeholder.targetIndex;
+          const isTraverseOutside = (traverse !== null && traverse.targetIndex >= (getDropzoneOptions(traverse?.targetId)?.count ?? -1) && traverse.targetIndex >= i && traverse?.targetId === id);
 
-          if ((isTraverseTarget && traverse !== null && i === traverse.targetIndex) || (placeholder !== null && i === placeholder.targetIndex)) {
-            const targetIndex = isTraverseTarget ? traverse!.targetIndex : placeholder!.targetIndex;
+          if (isSwappingTraversing || isSwappingPlaceholder || isTraverseOutside) {
+            const targetIndex = isTraverseTarget || isTraverseOutside ? traverse?.targetIndex : placeholder?.targetIndex;
+            if (targetIndex === undefined) return;
             const [x, y] = getPositionForIndex(targetIndex, grid).xy;
-            if (styles.xy.get()[0] !== x || styles.xy.get()[1] !== y) {
-              set({
-                xy: [x, y],
-                immediate: false,
-                scale: 1,
-                opacity: 0.8
-              });
-            }
+            set({
+              xy: [x, y],
+              immediate: false,
+              scale: 1,
+              opacity: 0.8
+            });
             matchedItem = true;
           }
 

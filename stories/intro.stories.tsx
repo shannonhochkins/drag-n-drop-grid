@@ -17,7 +17,7 @@ interface AppState {
   }>;
 }
 
-function Template({ single = false }: { single?: boolean}) {
+function Template({ single = false, outside = true }: { single?: boolean, outside?: boolean }) {
   const [mounted, setMounted] = React.useState(false);
   const [items, setItems] = React.useState<AppState>({
     left: [
@@ -82,9 +82,7 @@ function Template({ single = false }: { single?: boolean}) {
           style={{
             transform: mounted ? `translateX(100px)` : `translateX(0)`,
             transition: "transform 0.25s ease",
-            width: "600px",
             display: "flex",
-            border: "1px solid blue"
           }}
         >
           <GridDropZone
@@ -175,6 +173,11 @@ function Template({ single = false }: { single?: boolean}) {
                           }}
                         >
                           {item.name[0].toUpperCase()}
+                          <div onClick={() => {
+                            alert('a');
+                          }} style={{
+                            fontSize: 10
+                          }}>CLICK</div>
                         </div>
                       </div>
                     </Component>
@@ -186,12 +189,13 @@ function Template({ single = false }: { single?: boolean}) {
         </div>
       </div>
 
-      <GridDropZone
+      {outside && <GridDropZone
         style={{
           flex: "0 0 auto",
-          height: "200px",
-          width: "400px",
-          border: "1px solid red",
+          height: "200px", 
+          width: "100%",
+          marginTop: 20,
+          border: "1px solid #ddd",
           borderRadius: "1rem",
           marginRight: "10px",
           touchAction: "none"
@@ -229,7 +233,7 @@ function Template({ single = false }: { single?: boolean}) {
             </div>
           </GridItem>
         ))}
-      </GridDropZone>
+      </GridDropZone>}
     </GridContextProvider>
   );
 }
