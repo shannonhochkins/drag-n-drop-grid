@@ -1,7 +1,7 @@
 {
   "name": "drag-n-drop-grid",
   "type": "module",
-  "version": "3.0.8",
+  "version": "3.0.10",
   "description": "grid style drag and drop for react",
   "main": "./dist/drag-n-drop-grid-cjs.cjs",
   "module": "./dist/drag-n-drop-grid-es.js",

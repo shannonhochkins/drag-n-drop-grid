@@ -141,7 +141,7 @@ export function GridDropZone({
   );
 
   const hideDropzone = () => {
-    set({
+    set.start({
       immediate: false,
       scale: 0.5,
       opacity: 0
@@ -150,7 +150,7 @@ export function GridDropZone({
   let matchedItem = false;
   if (React.Children.count(children) === 0 && traverse?.targetId === id && traverse?.targetIndex !== undefined) {
     const [x, y] = getPositionForIndex(traverse.targetIndex, grid).xy;
-    set({
+    set.start({
       xy: [x, y],
       immediate: false,
       scale: 1,
@@ -287,7 +287,7 @@ export function GridDropZone({
             const targetIndex = isTraverseTarget || isTraverseOutside ? traverse?.targetIndex : placeholder?.targetIndex;
             if (targetIndex === undefined) return;
             const [x, y] = getPositionForIndex(targetIndex, grid).xy;
-            set({
+            set.start({
               xy: [x, y],
               immediate: false,
               scale: 1,
