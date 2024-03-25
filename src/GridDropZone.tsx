@@ -5,7 +5,7 @@ import { GridSettings, MarkerRender } from "./grid-types";
 import { swap } from "./swap";
 import { getPositionForIndex, getTargetIndex } from "./helpers";
 import { GridItemContext } from "./GridItemContext";
-import { animated, to, useSpring } from "react-spring";
+import { animated, to, useSpring } from "@react-spring/web";
 import { FullGestureState } from '@use-gesture/react';
 
 export interface GridDropZoneProps

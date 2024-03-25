@@ -1,7 +1,7 @@
 {
   "name": "drag-n-drop-grid",
   "type": "module",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "description": "grid style drag and drop for react",
   "main": "./dist/drag-n-drop-grid-cjs.cjs",
   "module": "./dist/drag-n-drop-grid-es.js",
@@ -38,7 +38,7 @@
     "@use-gesture/react": "^10.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-spring": "^9.7.3"
+    "@react-spring/web": "^9.7.3"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.2.20",

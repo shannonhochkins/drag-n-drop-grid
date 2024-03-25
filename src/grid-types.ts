@@ -1,4 +1,4 @@
-import { AnimatedComponent } from "react-spring";
+import { AnimatedComponent } from "@react-spring/web";
 
 export interface GridSettings {
   boxesPerRow: number;

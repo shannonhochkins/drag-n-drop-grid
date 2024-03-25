@@ -26,7 +26,7 @@ export default defineConfig(configEnv => {
           globals: {
             react: 'React',
             'react-dom': 'ReactDOM',
-            'react-spring': 'react-spring',
+            '@react-spring/web': '@react-spring/web',
             '@use-gesture/react': '@use-gesture/react',
           }
         }

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, CSSProperties, ReactNode, ComponentPropsWithoutRef } from "react";
 import { useGesture, UserGestureConfig, FullGestureState, Vector2 } from '@use-gesture/react';
-import { animated, to, useSpring } from "react-spring";
+import { animated, to, useSpring } from "@react-spring/web";
 import { GridItemContext } from "./GridItemContext";
 import { ChildRender } from "./grid-types";
 
