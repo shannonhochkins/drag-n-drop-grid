@@ -50,7 +50,7 @@ export function GridItem({
   const dragging = useRef(false);
   const startCoords = useRef<Vector2>([left, top]);
 
-  const [styles, set] = useSpring(() => {
+  const [styles, api] = useSpring(() => {
     if (mountWithTraverseTarget) {
       // this feels really brittle. unsure of a better
       // solution for now.
@@ -79,7 +79,7 @@ export function GridItem({
   function handleMove(state: FullGestureState<'drag'>) {
     const x = startCoords.current[0] + state.movement[0];
     const y = startCoords.current[1] + state.movement[1];
-    set({
+    api.start({
       xy: [x, y],
       immediate: true,
       opacity: 0.8,
@@ -137,7 +137,7 @@ export function GridItem({
 
   useEffect(() => {
     if (!dragging.current) {
-      set({
+      api.start({
         xy: [left, top],
         opacity: 1,
         scale: 1,
