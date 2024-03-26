@@ -326,7 +326,7 @@ export function GridDropZone({
   }
 
   return (
-    <div
+    <animated.div
       ref={ref}
       style={{
         position: "relative",
@@ -336,6 +336,6 @@ export function GridDropZone({
     >
       {gridChildren}
         {enableDropzoneMarker && dropzoneElement}
-    </div>
+    </animated.div>
   );
 }
